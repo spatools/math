@@ -1,4 +1,4 @@
-﻿# Geomath [![Build Status](https://travis-ci.org/spatools/math.png)](https://travis-ci.org/spatools/math) [![NPM version](https://badge.fury.io/js/math.png)](http://badge.fury.io/js/math)
+﻿# Geomath [![Build Status](https://travis-ci.org/spatools/math.png)](https://travis-ci.org/spatools/math) [![NPM version](https://badge.fury.io/js/geomath.png)](http://badge.fury.io/js/geomath) [![Bower version](https://badge.fury.io/bo/geomath.png)](http://badge.fury.io/bo/geomath)
 
 AMD Geometry and Matrix modules using reuse pattern for better performance
 
