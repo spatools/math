@@ -106,10 +106,23 @@ module.exports = function (grunt) {
         grunt.file.write(paths.build + "/bower.json", JSON.stringify(bower, null, 2));
     });
 
+    grunt.registerTask("npmpublish", "Publish NPM package", function () {
+        const 
+            npmBin = /^win/.test(process.platform) ? "npm.cmd" : "npm",
+            res = require("child_process").spawnSync(npmBin, ["publish"], { cwd: config.paths.build });
+
+        if (res.status !== 0) {
+            return grunt.fail.warn("An error occured while trying to publish NPM package", res.status);
+        }
+
+        grunt.verbose.writeln(res.stdout);
+        grunt.log.ok("NPM package successfully published!");
+    });
+
     grunt.registerTask("build", ["clean:dev", "clean:dist", "tslint:dev", "ts:dist", "packages"]);
     grunt.registerTask("dev", ["clean:dev", "tslint:dev", "ts:dev"]);
 
-    grunt.registerTask("publish", ["build", "clean:build", "buildcontrol:publish"]);
+    grunt.registerTask("publish", ["build", "clean:build", "buildcontrol:publish", "npmpublish"]);
 
     grunt.registerTask("default", ["build"]);
 };
