@@ -109,7 +109,7 @@ module.exports = function (grunt) {
     grunt.registerTask("npmpublish", "Publish NPM package", function () {
         const 
             npmBin = /^win/.test(process.platform) ? "npm.cmd" : "npm",
-            res = require("child_process").spawnSync(npmBin, ["publish"], { cwd: config.paths.build });
+            res = require("child_process").spawnSync(npmBin, ["publish"], { cwd: paths.build });
 
         if (res.status !== 0) {
             return grunt.fail.warn("An error occured while trying to publish NPM package", res.status);
