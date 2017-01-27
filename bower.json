@@ -1,0 +1,27 @@
+{
+  "name": "geomath",
+  "authors": [
+    "SPA Tools"
+  ],
+  "description": "AMD Geometry and Matrix modules using reuse pattern for better performance",
+  "main": "math.js",
+  "keywords": [
+    "math",
+    "geometry",
+    "matrix",
+    "reuse",
+    "css",
+    "webgl",
+    "transformation",
+    "umd"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/spatools/math",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "typings",
+    "tests"
+  ]
+}
