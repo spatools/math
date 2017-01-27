@@ -1,20 +1,17 @@
-﻿/// <reference path="../math.d.ts" />
-import base = require("./base");
+﻿import base = require("./base");
 import M3 = require("./matrix3");
 
-export interface Vector2 {
-    [index: number]: number;
-}
+export type Vector2 = [number, number];
 
 //#region Init Methods
 
-export var x: Vector2;
-export var y: Vector2;
+export let x: Vector2;
+export let y: Vector2;
 
 /** Create a new vector 2 with the given arguments */
-export var $: (x: number, y: number) => Vector2;
+export let $: (x: number, y: number) => Vector2;
 /** Return a copy of the given vector 2 */
-export var clone: (vector: Vector2) => Vector2;
+export let clone: (vector: Vector2) => Vector2;
 
 if (base.ArrayType === Array) {
     x = [1.0, 0.0];
@@ -39,8 +36,8 @@ else {
     };
 }
 
-export var u = x;
-export var v = y;
+export const u = x;
+export const v = y;
 
 //#endregion
 
@@ -67,7 +64,7 @@ export function sub(a: Vector2, b: Vector2, r?: Vector2): Vector2 {
 
     return r;
 }
-export var substract = sub;
+export const substract = sub;
 
 /** Return a vector 2 by performing r = -a */
 export function neg(a: Vector2, r?: Vector2): Vector2 {
@@ -79,7 +76,7 @@ export function neg(a: Vector2, r?: Vector2): Vector2 {
 
     return r;
 }
-export var negate = neg;
+export const negate = neg;
 
 /** Return result of operation performing r = dot(a, b) */
 export function dot(a: Vector2, b: Vector2): number {
@@ -99,7 +96,7 @@ export function cross(a: Vector2, b: Vector2, r?: Vector2): Vector2 {
 
 /** Return a vector 2 by performing r = m * v */
 export function mul3x3(m: M3.Matrix3, b: Vector2, r?: Vector2): Vector2 {
-    var x = v[0], y = v[1], z = v[2];
+    const x = v[0], y = v[1], z = v[2];
     if (r === undefined)
         r = new base.ArrayType(2);
 
@@ -118,7 +115,7 @@ export function normalize(a: Vector2, r?: Vector2): Vector2 {
     if (r === undefined)
         r = new base.ArrayType(2);
 
-    var im = 1.0 / length(a);
+    const im = 1.0 / length(a);
     r[0] = a[0] * im;
     r[1] = a[1] * im;
 

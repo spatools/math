@@ -1,19 +1,27 @@
-﻿/// <reference path="../math.d.ts" />
-import base = require("./base");
+﻿import base = require("./base");
 import V2 = require("./vector2");
 
-export interface Matrix3 {
-    [index: number]: number;
+export type Matrix3 = [
+    number, number, number,
+    number, number, number,
+    number, number, number
+];
+
+export interface BoundingBox {
+    top: number;
+    left: number;
+    right: number;
+    bottom: number;
 }
 
 //#region Init Methods
 
 /** Representation of 3x3 matrix identity */
-export var I: Matrix3;
+export let I: Matrix3;
 /** Create a new 3x3 matrix with the given arguments */
-export var $: (m00: number, m01: number, m02: number, m03: number, m04: number, m05: number, m06: number, m07: number, m08: number) => Matrix3;
+export let $: (m00: number, m01: number, m02: number, m03: number, m04: number, m05: number, m06: number, m07: number, m08: number) => Matrix3;
 /** Create a copy of the given 3x3 matrix */
-export var clone: (m: Matrix3) => Matrix3;
+export let clone: (m: Matrix3) => Matrix3;
 
 if (base.ArrayType === Array) {
     I = [1.0, 0.0, 0.0,
@@ -54,11 +62,11 @@ if (base.ArrayType === Array) {
     };
 }
 
-export var identity = I;
+export const identity = I;
 
 //#endregion
 
-//#region String Methods 
+//#region String Methods
 
 /** Return a string representation of the given matrix */
 export function toString(m: Matrix3): string {
@@ -76,7 +84,7 @@ export function toCss3dMatrix(m: Matrix3): string {
 }
 
 export function fromCssMatrix(css: string, r?: Matrix3): Matrix3 {
-    var c = css.match(/matrix(3d)?\(([^\)]+)\)/i)[2].split(",");
+    const c = css.match(/matrix(3d)?\(([^\)]+)\)/i)[2].split(",");
 
     if (r === undefined)
         r = clone(I);
@@ -110,19 +118,20 @@ export function inverse(m: Matrix3, r?: Matrix3): Matrix3 {
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var m11 = m[0], m21 = m[1], m31 = m[2],
+    const
+        m11 = m[0], m21 = m[1], m31 = m[2],
         m12 = m[3], m22 = m[4], m32 = m[5],
         m13 = m[6], m23 = m[7], m33 = m[8],
 
         b21 = m33 * m22 - m32 * m23,
         b22 = -m33 * m12 + m32 * m13,
-        b23 = m23 * m12 - m22 * m13,
+        b23 = m23 * m12 - m22 * m13;
 
-        det = m11 * b21 + m21 * b22 + m31 * b23;
-
+    let det = m11 * b21 + m21 * b22 + m31 * b23;
     if (!det) {
         return null;
     }
+
     det = 1.0 / det;
 
     r[0] = b21 * det;
@@ -141,7 +150,7 @@ export function inverse(m: Matrix3, r?: Matrix3): Matrix3 {
 /** Transpose the given matrix to r. */
 export function transpose(m: Matrix3, r?: Matrix3): Matrix3 {
     if (m === r) {
-        var m21 = m[1], m31 = m[2], m32 = m[5];
+        const m21 = m[1], m31 = m[2], m32 = m[5];
 
         m[1] = m[3];
         m[2] = m[6];
@@ -171,7 +180,7 @@ export function transpose(m: Matrix3, r?: Matrix3): Matrix3 {
 
 /** Transpose the given matrix to itself. */
 export function transposeSelf(m: Matrix3): Matrix3 {
-    var m21 = m[1], m31 = m[2], m32 = m[5];
+    const m21 = m[1], m31 = m[2], m32 = m[5];
 
     m[1] = m[3];
     m[2] = m[6];
@@ -188,7 +197,8 @@ export function mul(a: Matrix3, b: Matrix3, r?: Matrix3): Matrix3 {
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var m11 = a[0], m21 = a[1], m31 = a[2],
+    const
+        m11 = a[0], m21 = a[1], m31 = a[2],
         m12 = a[3], m22 = a[4], m32 = a[5],
         m13 = a[6], m23 = a[7], m33 = a[8],
 
@@ -210,14 +220,15 @@ export function mul(a: Matrix3, b: Matrix3, r?: Matrix3): Matrix3 {
 
     return r;
 }
-export var multiply = mul;
+export const multiply = mul;
 
 /** Return a new matrix by performing r = a * b, ensuring r is affine */
 export function mulAffine(a: Matrix3, b: Matrix3, r?: Matrix3): Matrix3 {
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var m11 = a[0], m21 = a[1],
+    const
+        m11 = a[0], m21 = a[1],
         m12 = a[3], m22 = a[4],
         m13 = a[6], m23 = a[7],
 
@@ -239,7 +250,7 @@ export function mulAffine(a: Matrix3, b: Matrix3, r?: Matrix3): Matrix3 {
 
     return r;
 }
-export var multiplyAffine = mulAffine;
+export const multiplyAffine = mulAffine;
 
 //#endregion
 
@@ -247,7 +258,7 @@ export var multiplyAffine = mulAffine;
 
 /** Creates a transformation matrix for translating each of the x and y axes by the amount given in the corresponding element of the 2-element vector. */
 export function makeTranslate(v: V2.Vector2, r?: Matrix3): Matrix3 {
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
 
     if (r === undefined)
         r = new base.ArrayType(9);
@@ -271,7 +282,7 @@ export function makeTranslate1(k: number, r?: Matrix3): Matrix3 {
 
 /** Concatenates a transformation matrix for translating each of the x and y axes by the amount given in the corresponding element of the 1-element vector to the given matrix. */
 export function translate(v: V2.Vector2, m: Matrix3, r?: Matrix3): Matrix3 {
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
 
     if (r === m) {
         m[6] += x;
@@ -311,11 +322,10 @@ export function translateSelf(v: V2.Vector2, m: Matrix3): Matrix3 {
 
 /** Creates a transformation matrix for scaling each of the x and y axes by the amount given in the corresponding element of the 2-element vector. */
 export function makeScale(v: V2.Vector2, r?: Matrix3): Matrix3 {
-
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
 
     r[0] = x;
     r[1] = 0;
@@ -336,7 +346,7 @@ export function makeScale1(k: number, r?: Matrix3): Matrix3 {
 
 /** Concatenates a transformation matrix for scaling each of the x and y axes by the amount given in the corresponding element of the 2-element vector to the given matrix. */
 export function scale(v: V2.Vector2, m: Matrix3, r?: Matrix3): Matrix3 {
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
 
     if (r === m) {
         m[0] *= x;
@@ -374,8 +384,9 @@ export function scaleAt(v: V2.Vector2, pt: V2.Vector2, m: Matrix3, r?: Matrix3):
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var tmp = makeScale(v);
-    var tmpPoint = transformPointAffine(tmp, pt);
+    const
+        tmp = makeScale(v),
+        tmpPoint = transformPointAffine(tmp, pt);
 
     translateSelf([pt[0] - tmpPoint[0], pt[1] - tmpPoint[1], pt[2] - tmpPoint[2]], tmp);
     mul(m, tmp, r);
@@ -389,11 +400,11 @@ export function scaleAt(v: V2.Vector2, pt: V2.Vector2, m: Matrix3, r?: Matrix3):
 
 /** Create a transformation matrix for rotation by given angle radians. */
 export function makeRotate(angle: number, r?: Matrix3): Matrix3 {
-
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var c = Math.cos(angle),
+    const
+        c = Math.cos(angle),
         s = Math.sin(angle);
 
     r[0] = c;
@@ -411,11 +422,11 @@ export function makeRotate(angle: number, r?: Matrix3): Matrix3 {
 
 /** Concatenates a rotation of angle radians to the given matrix. */
 export function rotate(angle: number, m: Matrix3, r?: Matrix3): Matrix3 {
-
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var c = Math.cos(angle),
+    const
+        c = Math.cos(angle),
         s = Math.sin(angle),
 
         m11 = m[0], m21 = m[1],
@@ -443,8 +454,9 @@ export function rotateAt(angle: number, pt: V2.Vector2, m: Matrix3, r?: Matrix3)
     if (r === undefined)
         r = new base.ArrayType(9);
 
-    var tmp = makeRotate(angle);
-    var tmpPoint = transformPointAffine(tmp, pt);
+    const
+        tmp = makeRotate(angle),
+        tmpPoint = transformPointAffine(tmp, pt);
 
     translateSelf([pt[0] - tmpPoint[0], pt[1] - tmpPoint[1]], tmp);
     mul(m, tmp, r);
@@ -461,12 +473,12 @@ export function transformPoint(m: Matrix3, v: V2.Vector2, r?: V2.Vector2): V2.Ve
     if (r === undefined)
         r = new base.ArrayType(2);
 
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
 
     r[0] = m[0] * x + m[3] * y + m[6];
     r[1] = m[1] * x + m[4] * y + m[7];
-    var w = m[2] * x + m[5] * y + m[8];
 
+    const w = m[2] * x + m[5] * y + m[8];
     if (w !== 1.0) {
         r[0] /= w;
         r[1] /= w;
@@ -480,11 +492,11 @@ export function transformLine(m: Matrix3, v: V2.Vector2, r?: V2.Vector2): V2.Vec
     if (r === undefined)
         r = new base.ArrayType(2);
 
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
     r[0] = m[0] * x + m[3] * y;
     r[1] = m[1] * x + m[4] * y;
-    var w = m[2] * x + m[5] * y;
 
+    const w = m[2] * x + m[5] * y;
     if (w !== 1.0) {
         r[0] /= w;
         r[1] /= w;
@@ -498,7 +510,7 @@ export function transformPointAffine(m: Matrix3, v: V2.Vector2, r?: V2.Vector2):
     if (r === undefined)
         r = new base.ArrayType(2);
 
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
 
     r[0] = m[0] * x + m[3] * y + m[6];
     r[1] = m[1] * x + m[4] * y + m[7];
@@ -511,7 +523,7 @@ export function transformLineAffine(m: Matrix3, v: V2.Vector2, r?: V2.Vector2): 
     if (r === undefined)
         r = new base.ArrayType(2);
 
-    var x = v[0], y = v[1];
+    const x = v[0], y = v[1];
 
     r[0] = m[0] * x + m[3] * y;
     r[1] = m[1] * x + m[4] * y;
@@ -525,12 +537,13 @@ export function transformLineAffine(m: Matrix3, v: V2.Vector2, r?: V2.Vector2): 
 
 /** Return the bounding box for the given element transformed by the given matrix. */
 export function getBoundingClientRect(e: HTMLElement, m: Matrix3): BoundingBox {
-    var w = e.offsetWidth,
+    const
+        w = e.offsetWidth,
         h = e.offsetHeight,
-        tl = [0, 0],
-        tr = [w, 0],
-        bl = [0, h],
-        br = [w, h];
+        tl = [0, 0] as V2.Vector2,
+        tr = [w, 0] as V2.Vector2,
+        bl = [0, h] as V2.Vector2,
+        br = [w, h] as V2.Vector2;
 
     transformPointAffine(m, tl, tl);
     transformPointAffine(m, tr, tr);
@@ -547,14 +560,17 @@ export function getBoundingClientRect(e: HTMLElement, m: Matrix3): BoundingBox {
 
 /** Return the transformation matrix of the given element. */
 export function getTransformationMatrix(e: HTMLElement): Matrix3 {
-    var c: any = getComputedStyle(e, null);
-    c = (c.transform || c.OTransform || c.WebkitTransform || c.msTransform || c.MozTransform || "none"); //.replace(/^none$/, "matrix(1,0,0,1,0,0)");
-    return c === "none" ? clone(I) : fromCssMatrix(c);
+    const
+        s = getComputedStyle(e, null) as any,
+        t = s.transform || s.OTransform || s.WebkitTransform || s.msTransform || s.MozTransform || "none";
+
+    return t === "none" ? clone(I) : fromCssMatrix(t);
 }
 
 /** Return the given position relative to specified element, by calculating transformation on the element */
 export function getRelativePosition(x: number, y: number, e: HTMLElement): V2.Vector2 {
-    var m = getAbsoluteTransformationMatrix(e),
+    const
+        m = getAbsoluteTransformationMatrix(e),
         invert = inverse(m);
 
     return transformPointAffine(invert, [x, y]);
@@ -564,24 +580,28 @@ export function getRelativePosition(x: number, y: number, e: HTMLElement): V2.Ve
 
 //#region Get Absolute Transformation Matrix
 
-var isBuggy;
+let isBuggy: boolean;
 function detectBuggy(): boolean {
-    var div = document.createElement("div"),
-        rect: ClientRect, result: boolean;
+    const div = document.createElement("div");
 
     div.style.cssText = "width:200px;height:200px;position:fixed;-moz-transform:scale(2);";
     document.body.appendChild(div);
 
-    rect = div.getBoundingClientRect();
-    result = !!((<any>getComputedStyle(div, null)).MozTransform && ((rect.bottom - rect.top) < 300)); // wow
+    const
+        rect = div.getBoundingClientRect(),
+        result = !!((<any>getComputedStyle(div, null)).MozTransform && ((rect.bottom - rect.top) < 300)); // wow
+
     div.parentNode.removeChild(div);
 
     return result;
 }
 function M3_getAbsoluteTransformationMatrixBuggy(x: HTMLElement): Matrix3 {
-    var transformationMatrix = clone(I),
-        docElem = document.documentElement,
-        parentRect, rect, t, c, s, origin;
+    const
+        transformationMatrix = clone(I),
+        docElem = document.documentElement;
+
+    let parentRect: ClientRect, rect: ClientRect,
+        t: Matrix3, c: any, s: any, origin: any;
 
     while (x && x !== document.documentElement) {
         t = clone(I);
@@ -593,7 +613,7 @@ function M3_getAbsoluteTransformationMatrixBuggy(x: HTMLElement): Matrix3 {
         }
 
         s = getComputedStyle(x, null);
-        c = (s.MozTransform || "none"); //.replace(/^none$/, "matrix(1,0,0,1,0,0)");
+        c = (s.MozTransform || "none");
 
         if (c !== "none") {
             c = fromCssMatrix(c);
@@ -604,12 +624,10 @@ function M3_getAbsoluteTransformationMatrixBuggy(x: HTMLElement): Matrix3 {
             }
             origin = translate(origin.split(" "), I);
 
-            // transformationMatrix = t * origin * c * origin^-1 * transformationMatrix
             mul(t, origin, t);
             mul(t, c, t);
             mul(t, inverse(origin), t);
             mul(t, transformationMatrix, transformationMatrix);
-            //transformationMatrix = multiply(multiply(multiply(multiply(t, origin), c), inverse(origin)), transformationMatrix);
         }
 
         x = <HTMLElement>x.parentNode;
@@ -620,14 +638,15 @@ function M3_getAbsoluteTransformationMatrixBuggy(x: HTMLElement): Matrix3 {
     return transformationMatrix;
 }
 function M3_getAbsoluteTransformationMatrix(element: HTMLElement): Matrix3 {
-    var transformationMatrix = clone(I),
-        x = element, rect = element.getBoundingClientRect(),
-        docElem = document.documentElement,
-        c, r;
+    const
+        transformationMatrix = clone(I),
+        rect = element.getBoundingClientRect(),
+        docElem = document.documentElement;
 
+    let x = element, c;
     while (x && x !== docElem) {
         c = getComputedStyle(x, null);
-        c = (c.transform || c.WebkitTransform || c.msTransform || c.MozTransform || c.OTransform || "none"); //.replace(/^none$/, "matrix(1,0,0,1,0,0)");
+        c = (c.transform || c.WebkitTransform || c.msTransform || c.MozTransform || c.OTransform || "none");
 
         if (c !== "none") {
             c = fromCssMatrix(c);
@@ -637,7 +656,7 @@ function M3_getAbsoluteTransformationMatrix(element: HTMLElement): Matrix3 {
         x = <HTMLElement>x.parentNode;
     }
 
-    r = getBoundingClientRect(element, transformationMatrix);
+    const r = getBoundingClientRect(element, transformationMatrix);
     translateSelf([rect.left - r.left, rect.top - r.top], transformationMatrix);
 
     return transformationMatrix;

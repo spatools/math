@@ -1,37 +1,27 @@
 {
   "name": "geomath",
-  "version": "0.1.0",
   "authors": [
     "SPA Tools"
   ],
   "description": "AMD Geometry and Matrix modules using reuse pattern for better performance",
-  "main": "dist/math.js",
+  "main": "math.js",
   "keywords": [
     "math",
     "geometry",
     "matrix",
-    "require",
     "reuse",
     "css",
     "webgl",
     "transformation",
-    "amd"
+    "umd"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/spatools/promise",
+  "homepage": "https://github.com/spatools/math",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "typings",
     "tests"
-  ],
-  "dependencies": {
-    "requirejs": "~2.1.10"
-  },
-  "devDependencies": {
-    "mocha": "~1.17.1",
-    "should": "3.1.2",
-    "sinon": "http://sinonjs.org/releases/sinon-1.8.1.js"
-  }
+  ]
 }

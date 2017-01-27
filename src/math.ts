@@ -1,11 +1,5 @@
-﻿/// <reference path="math.d.ts" />
+﻿import * as _geometry from "./math/geometry";
+import * as _matrix from "./math/matrix";
 
-import geometry = require("./math/geometry");
-import matrix = require("./math/matrix");
-
-var result = {
-    geometry: geometry,
-    matrix: matrix
-};
-
-export = result;
+export import geometry = _geometry;
+export import matrix = _matrix;

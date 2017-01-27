@@ -1,20 +1,27 @@
-﻿/// <reference path="../math.d.ts" />
+﻿export interface ArrayTypes {
+    simple: typeof Array;
+    float32?: typeof Float32Array;
+    float64?: typeof Float64Array;
+    webgl?: typeof Float32Array;
+}
 
-export var ArrayType: any = Array;
-export var arrayTypes: any = { simple: Array };
+export let ArrayType: any = Array;
+export const arrayTypes = { simple: Array } as ArrayTypes;
 
-export var engine = "css";
-export var engines = { css: "css", webgl: "webgl", tree: "treejs" }; //future implementation
+export let engine = "css";
+export const engines = { css: "css", webgl: "webgl", tree: "treejs" }; // future implementation
 
-if ("Float32Array" in window) {
+const win = window as any;
+
+if ("Float32Array" in win) {
     ArrayType = Float32Array;
     arrayTypes.float32 = Float32Array;
 }
 
-if ("Float64Array" in window) {
+if ("Float64Array" in win) {
     arrayTypes.float64 = Float64Array;
 }
 
-if ("WebGLFloatArray" in window) {
-    arrayTypes.webgl = window.WebGLFloatArray;
+if ("WebGLFloatArray" in win) {
+    arrayTypes.webgl = win.WebGLFloatArray;
 }
