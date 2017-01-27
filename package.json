@@ -1,15 +1,19 @@
-﻿{
+{
   "name": "geomath",
   "version": "0.1.0",
   "description": "AMD Geometry and Matrix modules using reuse pattern for better performance",
-  "main": "dist/math.js",
-  "scripts": {
-	"install": "bower install && tsd reinstall",
-    "test": "grunt"
-  },
+  "author": "SPA Tools",
+  "license": "MIT",
+  "main": "math.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spatools/promise.git"
+    "url": "https://github.com/spatools/math.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spatools/math/issues"
+  },
+  "scripts": {
+    "test": "grunt"
   },
   "keywords": [
     "math",
@@ -20,23 +24,19 @@
     "css",
     "webgl",
     "transformation",
-    "amd"
+    "umd"
   ],
   "devDependencies": {
-	"grunt": ">=0.4.2",
-	"grunt-contrib-clean": ">=0.5.0",
-	"grunt-contrib-connect": ">=0.6.0",
-	"grunt-contrib-jshint": ">=0.8.0",
-	"grunt-contrib-watch": ">=0.5.3",
-	"grunt-mocha": ">=0.4.10",
-	"grunt-typescript": ">=0.2.7",
-	"grunt-tslint": ">=0.4.0",
-	"load-grunt-tasks": ">=0.3.0",
-	"time-grunt": ">=0.2.9"
-  },
-  "author": "SPA Tools",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/spatools/promise/issues"
+    "grunt": "^1.0.1",
+    "grunt-build-control": "^0.7.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-ts": "^6.0.0-beta.11",
+    "grunt-tslint": "^4.0.0",
+    "jit-grunt": "^0.10.0",
+    "time-grunt": "^1.4.0",
+    "tslint": "^4.4.2",
+    "typescript": "^2.1.5"
   }
 }

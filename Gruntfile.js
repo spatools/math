@@ -1,37 +1,44 @@
-﻿'use strict';
+﻿"use strict";
 
 module.exports = function (grunt) {
-    require('load-grunt-tasks')(grunt); // Load grunt tasks automatically
-    require('time-grunt')(grunt); // Time how long tasks take. Can help when optimizing build times
+    // Load grunt tasks automatically
+    require("jit-grunt")(grunt, {
+        buildcontrol: "grunt-build-control"
+    });
+    require("time-grunt")(grunt); // Time how long tasks take. Can help when optimizing build times
 
-    var options = {
-        dev: grunt.option('dev')
-    };
+    var 
+        pkg = grunt.file.readJSON("package.json"),
+
+        paths = {
+            src: "src",
+            build: "dist",
+            temp: ".temp",
+            test: "test"
+        },
+
+        options = {
+            dev: grunt.option("dev")
+        };
 
     // Define the configuration for all the tasks
     grunt.initConfig({
         // Configurable paths
-        paths: {
-            src: 'src',
-            build: 'dist',
-            temp: '.temp',
-            test: 'test'
-        },
+        paths: paths,
 
-        typescript: {
+        ts: {
             options: {
+                fast: "never",
                 target: "es3",
-                module: "amd",
-                sourcemap: false,
+                module: "umd",
+                sourceMap: false,
                 declaration: false,
-                comments: false,
-                disallowbool: true,
-                disallowimportmodule: true
+                comments: true
             },
             dev: {
                 src: "<%= paths.src %>/**/*.ts",
                 options: {
-                    sourcemap: true
+                    sourceMap: true
                 }
             },
             test: {
@@ -39,22 +46,12 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: "<%= paths.src %>/**/*.ts",
-                dest: "<%= paths.build %>/",
+                outDir: "<%= paths.build %>",
                 options: {
-                    base_path: '<%= paths.src %>'
+                    declaration: true,
+                    rootDir: "<%= paths.src %>"
                 }
             }
-        },
-
-        jshint: {
-            options: {
-                jshintrc: "jshint.json",
-            },
-
-            base: ["*.js"],
-            dev: ["<%= paths.src %>/**/*.js"],
-            dist: ["<%= paths.build %>/**/*.js"],
-            test: ["<%= paths.test %>/**/*.js"]
         },
 
         tslint: {
@@ -69,20 +66,22 @@ module.exports = function (grunt) {
             }
         },
 
-        connect: {
-            test: {
+        buildcontrol: {
+            options: {
+                dir: "<%= paths.build %>",
+                commit: true,
+                push: true,
+                branch: "release"
+            },
+            publish: {
                 options: {
-                    port: "8080",
-                    open: "http://localhost:8080/tests/index.html",
-                    keepalive: true
+                    tag: pkg.version,
+                    remote: pkg.repository.url,
+                    message: "Publish %sourceName% '" + pkg.version + "' from commit %sourceCommit% on branch %sourceBranch%"
                 }
             }
         },
-
-        mocha: {
-            test: ["<%= paths.test %>/index.html"]
-        },
-
+        
         clean: {
             dev: [
                 "<%= paths.src %>/**/*.d.ts",
@@ -90,35 +89,27 @@ module.exports = function (grunt) {
                 "<%= paths.src %>/**/*.js",
                 "<%= paths.src %>/**/*.js.map"
             ],
-            test: [
-                "<%= paths.test %>/**/*.d.ts",
-                "<%= paths.test %>/**/*.js",
-                "<%= paths.test %>/**/*.js.map"
-            ],
-        },
-
-        watch: {
-            tslint: {
-                files: ['<%= tslint.dev.src %>'],
-                tasks: ['tslint:dev']
-            },
-            jshint: {
-                files: ['<%= jshint.dev.src %>'],
-                tasks: ['jshint:dev']
-            },
-            test: {
-                files: ['<%= paths.test %>/*.*'],
-                tasks: ['test']
-            },
-            gruntfile: {
-                files: ['Gruntfile.js']
-            }
+            dist: "<%= paths.build %>",
+            build: "<%= paths.build %>/.baseDir.*"
         }
     });
 
-    grunt.registerTask("build", ["tslint:dev", "typescript:dist", "jshint:dist"]);
-    grunt.registerTask("dev", ["tslint:dev", "typescript:dev", "jshint:dev"]);
-    grunt.registerTask("test", ["dev", "tslint:test", "typescript:test", "jshint:test", "mocha:test"]);
+    grunt.registerTask("packages", function() {
+        var pkg = grunt.file.readJSON("package.json");
 
-    grunt.registerTask("default", ["clean", "test", "build"]);
+        delete pkg.devDependencies;
+        delete pkg.scripts;
+
+        grunt.file.write(paths.build + "/package.json", JSON.stringify(pkg, null, 2));
+
+        var bower = grunt.file.readJSON("bower.json");
+        grunt.file.write(paths.build + "/bower.json", JSON.stringify(bower, null, 2));
+    });
+
+    grunt.registerTask("build", ["clean:dev", "clean:dist", "tslint:dev", "ts:dist", "packages"]);
+    grunt.registerTask("dev", ["clean:dev", "tslint:dev", "ts:dev"]);
+
+    grunt.registerTask("publish", ["build", "clean:build", "buildcontrol:publish"]);
+
+    grunt.registerTask("default", ["build"]);
 };
