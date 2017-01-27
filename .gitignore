@@ -24,9 +24,10 @@ tests/*.js.map
 tests/helpers/*.d.ts
 tests/helpers/*.js
 tests/helpers/*.js.map
+**/.baseDir.*
 
 # Build results
-
+[Dd]ist/
 [Dd]ebug/
 [Rr]elease/
 x64/
