@@ -1,8 +1,15 @@
-﻿/// <reference path="../math.d.ts" />
+﻿export interface Point {
+    x: number;
+    y: number;
+}
+
+export interface CenterAreaResult extends Point {
+    a: number;
+}
 
 /** Calculate area for given set of points, if two points, calculate length */
-export function area(pts: Point[]): number {
-    var p1, p2;
+export function area(pts: Point[], signed = false): number {
+    let p1: Point, p2: Point;
     switch (pts.length) {
         case 0:
         case 1:
@@ -10,29 +17,33 @@ export function area(pts: Point[]): number {
 
         case 2:
             p1 = pts[0]; p2 = pts[1];
-            var x = p2.x - p1.x,
+            const
+                x = p2.x - p1.x,
                 y = p2.y - p1.y;
 
             return Math.sqrt((x * x) + (y * y));
 
         default:
-            var a = 0, nPts = pts.length, i = 0, j = nPts - 1;
-
-            for (; i < nPts; j = i++) {
-                p1 = pts[i]; p2 = pts[j];
-                a += p1.x * p2.y;
-                a -= p1.y * p2.x;
+            const len = pts.length;
+            if (!equals(pts[0], pts[len - 1])) {
+                pts = pts.concat([pts[0]]);
             }
 
-            a /= 2;
+            let det = 0, i = 0;
+            for (; i < len; i++) {
+                p1 = pts[i]; p2 = pts[i + 1];
+                det += p1.x * p2.y - p1.y * p2.x;
+            }
 
-            return a;
+            return signed ?
+                det / 2 :
+                Math.abs(det) / 2;
     }
 }
 
 /** Calculate center for given set of points */
 export function center(pts: Point[], _area?: number): Point {
-    var p1, p2;
+    let p1: Point, p2: Point;
     switch (pts.length) {
         case 0:
             return null;
@@ -50,26 +61,33 @@ export function center(pts: Point[], _area?: number): Point {
             };
 
         default:
-            var nPts = pts.length,
-                x = 0, y = 0,
-                f, i, j = nPts - 1;
+            const
+                len = pts.length,
+                pArea = (_area || area(pts, true)) * 6;
 
-            for (i = 0; i < nPts; j = i++) {
-                p1 = pts[i]; p2 = pts[j];
-                f = p1.x * p2.y - p2.x * p1.y;
-                x += (p1.x + p2.x) * f;
-                y += (p1.y + p2.y) * f;
+            if (!equals(pts[0], pts[len - 1])) {
+                pts = pts.concat([pts[0]]);
             }
 
-            f = (_area || area(pts)) * 6;
+            let x = 0, y = 0, i = 0, det;
+            for (; i < len; i++) {
+                p1 = pts[i]; p2 = pts[i + 1];
+                det = p1.x * p2.y - p2.x * p1.y;
 
-            return { x: x / f, y: y / f };
+                x += (p1.x + p2.x) * det;
+                y += (p1.y + p2.y) * det;
+            }
+
+            return {
+                x: x / pArea,
+                y: y / pArea
+            };
     }
 }
 
 /** Calculate center and area for given set of points (more efficient than both methods separated */
-export function centerArea(pts: Point[]): CenterAreaResult {
-    var p1, p2, x, y;
+export function centerArea(pts: Point[], signed = false): CenterAreaResult {
+    let p1: Point, p2: Point, x: number, y: number;
     switch (pts.length) {
         case 0:
             return null;
@@ -89,22 +107,34 @@ export function centerArea(pts: Point[]): CenterAreaResult {
             };
 
         default:
-            var area = 0, nPts = pts.length,
-                i = 0, f, j = nPts - 1,
-                sortedPts = pts.sort((a, b) => (a.y + a.x) - (b.y + b.x));
+            const len = pts.length;
+            if (!equals(pts[0], pts[len - 1])) {
+                pts = pts.concat([pts[0]]);
+            }
 
-            for (x = y = 0; i < nPts; j = i++) {
-                p1 = sortedPts[i]; p2 = sortedPts[j];
-                f = p1.x * p2.y - p2.x * p1.y;
+            let area = 0, i = 0, det;
+            for (x = y = 0; i < len; i++) {
+                p1 = pts[i]; p2 = pts[i + 1];
+                det = p1.x * p2.y - p2.x * p1.y;
 
-                x += (p1.x + p2.x) * f;
-                y += (p1.y + p2.y) * f;
-                area += f;
+                x += (p1.x + p2.x) * det;
+                y += (p1.y + p2.y) * det;
+                area += det;
             }
 
             area /= 2;
-            f = area * 6;
+            det = area * 6;
 
-            return { x: x / f, y: y / f, a: area };
+            return {
+                x: x / det,
+                y: y / det,
+                a: signed ?
+                    area :
+                    Math.abs(area)
+            };
     }
+}
+
+function equals(pt1: Point, pt2: Point): boolean {
+    return pt1.x === pt2.x && pt1.y === pt2.y;
 }
