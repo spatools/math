@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     /** Calculate area for given set of points, if two points, calculate length */
     function area(pts, signed) {
         if (signed === void 0) { signed = false; }

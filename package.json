@@ -1,6 +1,6 @@
 {
   "name": "geomath",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AMD Geometry and Matrix modules using reuse pattern for better performance",
   "author": "SPA Tools",
   "license": "MIT",

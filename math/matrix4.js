@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     var base = require("./base");
     var V3 = require("./vector3");
     //#region Init Methods
@@ -164,7 +165,7 @@
             r = new base.ArrayType(9);
         var a11 = m[10] * m[5] - m[6] * m[9], a21 = -m[10] * m[1] + m[2] * m[9], a31 = m[6] * m[1] - m[2] * m[5], a12 = -m[10] * m[4] + m[6] * m[8], a22 = m[10] * m[0] - m[2] * m[8], a32 = -m[6] * m[0] + m[2] * m[4], a13 = m[9] * m[4] - m[5] * m[8], a23 = -m[9] * m[0] + m[1] * m[8], a33 = m[5] * m[0] - m[1] * m[4];
         var det = m[0] * (a11) + m[1] * (a12) + m[2] * (a13);
-        if (det === 0) {
+        if (det === 0) { // no inverse
             throw new Error("matrix not invertible");
         }
         var idet = 1.0 / det;
@@ -805,7 +806,7 @@
             if (c !== "none") {
                 c = fromCssMatrix(c);
                 origin = s.MozTransformOrigin || "0 0";
-                if (origin.indexOf("%") !== -1) {
+                if (origin.indexOf("%") !== -1) { // Firefox gives 50% 50% when there is no transform!? and pixels (50px 30px) otherwise
                     origin = "0 0";
                 }
                 split = origin.split(" ");

@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     var base = require("./base");
     if (base.ArrayType === Array) {
         exports.x = [1.0, 0.0];

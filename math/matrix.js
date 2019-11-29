@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     var vector2 = require("./vector2");
     var vector3 = require("./vector3");
     var matrix3 = require("./matrix3");

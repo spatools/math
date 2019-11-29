@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     exports.ArrayType = Array;
     exports.arrayTypes = { simple: Array };
     exports.engine = "css";

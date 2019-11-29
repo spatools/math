@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     var base = require("./base");
     //#region Init Methods
     exports._temp1 = new base.ArrayType(3), exports._temp2 = new base.ArrayType(3), exports._temp3 = new base.ArrayType(3);

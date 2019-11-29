@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     var _geometry = require("./math/geometry");
     var _matrix = require("./math/matrix");
     exports.geometry = _geometry;

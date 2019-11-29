@@ -8,6 +8,7 @@
     }
 })(function (require, exports) {
     "use strict";
+    exports.__esModule = true;
     var base = require("./base");
     if (base.ArrayType === Array) {
         exports.I = [1.0, 0.0, 0.0,
@@ -301,7 +302,7 @@
         if (r === undefined)
             r = new base.ArrayType(9);
         var tmp = makeScale(v), tmpPoint = transformPointAffine(tmp, pt);
-        translateSelf([pt[0] - tmpPoint[0], pt[1] - tmpPoint[1], pt[2] - tmpPoint[2]], tmp);
+        translateSelf([pt[0] - tmpPoint[0], pt[1] - tmpPoint[1]], tmp);
         mul(m, tmp, r);
         return r;
     }
@@ -449,7 +450,7 @@
     function M3_getAbsoluteTransformationMatrixBuggy(x) {
         var transformationMatrix = exports.clone(exports.I), docElem = document.documentElement;
         var parentRect, rect, t, c, s, origin;
-        while (x && x !== document.documentElement) {
+        while (x && x !== docElem) {
             t = exports.clone(exports.I);
             parentRect = x.parentNode && x.parentNode.getBoundingClientRect ? x.parentNode.getBoundingClientRect() : null;
             rect = x.getBoundingClientRect();
@@ -461,7 +462,7 @@
             if (c !== "none") {
                 c = fromCssMatrix(c);
                 origin = s.MozTransformOrigin || "0 0";
-                if (origin.indexOf("%") !== -1) {
+                if (origin.indexOf("%") !== -1) { // Firefox gives 50% 50% when there is no transform!? and pixels (50px 30px) otherwise
                     origin = "0 0";
                 }
                 origin = translate(origin.split(" "), exports.I);
