@@ -30,14 +30,14 @@ if (base.ArrayType === Array) {
 
     $ = function (m00: number, m01: number, m02: number, m03: number, m04: number, m05: number, m06: number, m07: number, m08: number): Matrix3 {
         return [m00, m01, m02,
-                m03, m04, m05,
-                m06, m07, m08];
+            m03, m04, m05,
+            m06, m07, m08];
     };
 
     clone = function (m: Matrix3): Matrix3 {
         return [m[0], m[1], m[2],
-                m[3], m[4], m[5],
-                m[6], m[7], m[8]];
+        m[3], m[4], m[5],
+        m[6], m[7], m[8]];
     };
 } else {
     I = new base.ArrayType([
@@ -388,7 +388,7 @@ export function scaleAt(v: V2.Vector2, pt: V2.Vector2, m: Matrix3, r?: Matrix3):
         tmp = makeScale(v),
         tmpPoint = transformPointAffine(tmp, pt);
 
-    translateSelf([pt[0] - tmpPoint[0], pt[1] - tmpPoint[1], pt[2] - tmpPoint[2]], tmp);
+    translateSelf([pt[0] - tmpPoint[0], pt[1] - tmpPoint[1]], tmp);
     mul(m, tmp, r);
 
     return r;
@@ -603,7 +603,7 @@ function M3_getAbsoluteTransformationMatrixBuggy(x: HTMLElement): Matrix3 {
     let parentRect: ClientRect, rect: ClientRect,
         t: Matrix3, c: any, s: any, origin: any;
 
-    while (x && x !== document.documentElement) {
+    while (x && x !== docElem) {
         t = clone(I);
         parentRect = x.parentNode && (<HTMLElement>x.parentNode).getBoundingClientRect ? (<HTMLElement>x.parentNode).getBoundingClientRect() : null;
         rect = x.getBoundingClientRect();
