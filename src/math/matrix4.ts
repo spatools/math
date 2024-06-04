@@ -932,7 +932,8 @@ function detectBuggy(): boolean {
 
     const
         rect = div.getBoundingClientRect(),
-        result = !!((<any>getComputedStyle(div, null)).MozTransform && (rect.bottom - rect.top < 300)); // wow
+        cp = getComputedStyle(div, null) as any,
+        result = !!(cp.MozTransform && cp.MozTransform !== "none" && ((rect.bottom - rect.top) < 300)); // wow
 
     div.parentNode.removeChild(div);
 
