@@ -787,7 +787,7 @@
         var div = document.createElement("div");
         div.style.cssText = "width:200px;height:200px;position:fixed;-moz-transform:scale(2);";
         document.body.appendChild(div);
-        var rect = div.getBoundingClientRect(), result = !!(getComputedStyle(div, null).MozTransform && (rect.bottom - rect.top < 300)); // wow
+        var rect = div.getBoundingClientRect(), cp = getComputedStyle(div, null), result = !!(cp.MozTransform && cp.MozTransform !== "none" && ((rect.bottom - rect.top) < 300)); // wow
         div.parentNode.removeChild(div);
         return result;
     }
