@@ -561,7 +561,7 @@ export function getBoundingClientRect(e: HTMLElement, m: Matrix3): BoundingBox {
 /** Return the transformation matrix of the given element. */
 export function getTransformationMatrix(e: HTMLElement): Matrix3 {
     const
-        s = getComputedStyle(e, null) as any,
+        s = (e.ownerDocument.defaultView as Window).getComputedStyle(e, null) as any,
         t = s.transform || s.OTransform || s.WebkitTransform || s.msTransform || s.MozTransform || "none";
 
     return t === "none" ? clone(I) : fromCssMatrix(t);
@@ -599,7 +599,8 @@ function detectBuggy(): boolean {
 function M3_getAbsoluteTransformationMatrixBuggy(x: HTMLElement): Matrix3 {
     const
         transformationMatrix = clone(I),
-        docElem = document.documentElement;
+        docElem = x.ownerDocument.documentElement,
+        window = x.ownerDocument.defaultView as Window;
 
     let parentRect: ClientRect, rect: ClientRect,
         t: Matrix3, c: any, s: any, origin: any;
@@ -613,7 +614,7 @@ function M3_getAbsoluteTransformationMatrixBuggy(x: HTMLElement): Matrix3 {
             translateSelf([rect.left - parentRect.left, rect.top - parentRect.top], t);
         }
 
-        s = getComputedStyle(x, null);
+        s = window.getComputedStyle(x, null);
         c = (s.MozTransform || "none");
 
         if (c !== "none") {
@@ -642,11 +643,12 @@ function M3_getAbsoluteTransformationMatrix(element: HTMLElement): Matrix3 {
     const
         transformationMatrix = clone(I),
         rect = element.getBoundingClientRect(),
-        docElem = document.documentElement;
+        docElem = element.ownerDocument.documentElement,
+        window = element.ownerDocument.defaultView as Window;
 
     let x = element, c;
     while (x && x !== docElem) {
-        c = getComputedStyle(x, null);
+        c = window.getComputedStyle(x, null);
         c = (c.transform || c.WebkitTransform || c.msTransform || c.MozTransform || c.OTransform || "none");
 
         if (c !== "none") {
