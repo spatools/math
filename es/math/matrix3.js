@@ -395,7 +395,7 @@ export function getBoundingClientRect(e, m) {
 }
 /** Return the transformation matrix of the given element. */
 export function getTransformationMatrix(e) {
-    const s = getComputedStyle(e, null), t = s.transform || s.OTransform || s.WebkitTransform || s.msTransform || s.MozTransform || "none";
+    const s = e.ownerDocument.defaultView.getComputedStyle(e, null), t = s.transform || s.OTransform || s.WebkitTransform || s.msTransform || s.MozTransform || "none";
     return t === "none" ? clone(I) : fromCssMatrix(t);
 }
 /** Return the given position relative to specified element, by calculating transformation on the element */
@@ -415,7 +415,7 @@ function detectBuggy() {
     return result;
 }
 function M3_getAbsoluteTransformationMatrixBuggy(x) {
-    const transformationMatrix = clone(I), docElem = document.documentElement;
+    const transformationMatrix = clone(I), docElem = x.ownerDocument.documentElement, window = x.ownerDocument.defaultView;
     let parentRect, rect, t, c, s, origin;
     while (x && x !== docElem) {
         t = clone(I);
@@ -424,7 +424,7 @@ function M3_getAbsoluteTransformationMatrixBuggy(x) {
         if (parentRect) {
             translateSelf([rect.left - parentRect.left, rect.top - parentRect.top], t);
         }
-        s = getComputedStyle(x, null);
+        s = window.getComputedStyle(x, null);
         c = (s.MozTransform || "none");
         if (c !== "none") {
             c = fromCssMatrix(c);
@@ -444,10 +444,10 @@ function M3_getAbsoluteTransformationMatrixBuggy(x) {
     return transformationMatrix;
 }
 function M3_getAbsoluteTransformationMatrix(element) {
-    const transformationMatrix = clone(I), rect = element.getBoundingClientRect(), docElem = document.documentElement;
+    const transformationMatrix = clone(I), rect = element.getBoundingClientRect(), docElem = element.ownerDocument.documentElement, window = element.ownerDocument.defaultView;
     let x = element, c;
     while (x && x !== docElem) {
-        c = getComputedStyle(x, null);
+        c = window.getComputedStyle(x, null);
         c = (c.transform || c.WebkitTransform || c.msTransform || c.MozTransform || c.OTransform || "none");
         if (c !== "none") {
             c = fromCssMatrix(c);
