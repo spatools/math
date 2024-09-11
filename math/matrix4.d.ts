@@ -1,5 +1,5 @@
-import V3 = require("./vector3");
-import M3 = require("./matrix3");
+import * as V3 from "./vector3";
+import * as M3 from "./matrix3";
 export declare type Matrix4 = [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number];
 export interface BoundingBox {
     top: number;

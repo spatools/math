@@ -1,6 +1,6 @@
 {
   "name": "geomath",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "AMD Geometry and Matrix modules using reuse pattern for better performance",
   "author": "SPA Tools",
   "license": "MIT",
@@ -22,5 +22,39 @@
     "webgl",
     "transformation",
     "umd"
-  ]
+  ],
+  "exports": {
+    ".": {
+      "default": "./math.js",
+      "import": "./es/math.js"
+    },
+    "./math/base": {
+      "default": "./math/base.js",
+      "import": "./es/math/base.js"
+    },
+    "./math/geometry": {
+      "default": "./math/geometry.js",
+      "import": "./es/math/geometry.js"
+    },
+    "./math/matrix": {
+      "default": "./math/matrix.js",
+      "import": "./es/math/matrix.js"
+    },
+    "./math/matrix3": {
+      "default": "./math/matrix3.js",
+      "import": "./es/math/matrix3.js"
+    },
+    "./math/matrix4": {
+      "default": "./math/matrix4.js",
+      "import": "./es/math/matrix4.js"
+    },
+    "./math/vector2": {
+      "default": "./math/vector2.js",
+      "import": "./es/math/vector2.js"
+    },
+    "./math/vector3": {
+      "default": "./math/vector3.js",
+      "import": "./es/math/vector3.js"
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import M4 = require("./matrix4");
+import * as M4 from "./matrix4";
 export declare type Vector3 = [number, number, number];
 export declare const _temp1: any, _temp2: any, _temp3: any;
 export declare let x: Vector3;

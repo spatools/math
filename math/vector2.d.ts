@@ -1,4 +1,4 @@
-import M3 = require("./matrix3");
+import * as M3 from "./matrix3";
 export declare type Vector2 = [number, number];
 export declare let x: Vector2;
 export declare let y: Vector2;
