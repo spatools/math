@@ -1,5 +1,5 @@
-﻿import base = require("./base");
-import V2 = require("./vector2");
+﻿import * as base from "./base";
+import * as V2 from "./vector2";
 
 export type Matrix3 = [
     number, number, number,

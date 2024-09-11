@@ -51,6 +51,16 @@ module.exports = function (grunt) {
                     declaration: true,
                     rootDir: "<%= paths.src %>"
                 }
+            },
+            distes: {
+                src: "<%= paths.src %>/**/*.ts",
+                outDir: "<%= paths.build %>/es",
+                options: {
+                    target: "es6",
+                    module: "es6",
+                    declaration: false,
+                    rootDir: "<%= paths.src %>"
+                }
             }
         },
 
@@ -119,7 +129,7 @@ module.exports = function (grunt) {
         grunt.log.ok("NPM package successfully published!");
     });
 
-    grunt.registerTask("build", ["clean:dev", "clean:dist", "tslint:dev", "ts:dist", "packages"]);
+    grunt.registerTask("build", ["clean:dev", "clean:dist", "tslint:dev", "ts:dist", "ts:distes", "packages"]);
     grunt.registerTask("dev", ["clean:dev", "tslint:dev", "ts:dev"]);
 
     grunt.registerTask("publish", ["build", "clean:build", "buildcontrol:publish", "npmpublish"]);
